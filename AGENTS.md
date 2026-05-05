@@ -54,6 +54,7 @@ npm run format   # Auto-format
 | `quartz.config.ts`          | Site config         |
 | `quartz.layout.ts`          | Layout & components |
 | `quartz/styles/custom.scss` | Your CSS            |
+| `QUARTZ_CHANGES.md`         | Log of core edits   |
 | `content/`                  | Markdown content    |
 
 ## Implementation Discoveries & Context
