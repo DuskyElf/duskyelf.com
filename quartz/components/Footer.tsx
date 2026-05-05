@@ -11,7 +11,11 @@ export default ((opts?: Options) => {
     const links = opts?.links ?? []
     return (
       <footer class={`${displayClass ?? ""}`}>
-        <p>DuskyElf © {year}</p>
+        <p>
+          Code licensed under <a href="https://opensource.org/license/mit/">MIT</a>, content under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. 
+          <br />
+          DuskyElf © {year}
+        </p>
         <ul>
           {Object.entries(links).map(([text, link]) => (
             <li>
