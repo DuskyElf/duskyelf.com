@@ -9,6 +9,15 @@
   margin: 0;
   text-align: inherit;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 
   & svg {
     position: absolute;
@@ -16,7 +25,9 @@
     height: 20px;
     top: calc(50% - 10px);
     fill: var(--darkgray);
-    transition: opacity 0.1s ease;
+    transition:
+      opacity 0.15s ease,
+      transform 0.3s ease;
   }
 }
 
@@ -34,14 +45,27 @@
   }
   & > .nightIcon {
     display: inline;
+    animation: fadeIn 0.3s ease;
   }
 }
 
 :root .darkmode {
   & > .dayIcon {
     display: inline;
+    animation: fadeIn 0.3s ease;
   }
   & > .nightIcon {
     display: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

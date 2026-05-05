@@ -1,3 +1,365 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+// Custom overrides for minimal, clean aesthetic
+
+// === LOADING TRANSITIONS ===
+
+// === BACKGROUND PATTERN ===
+body {
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+
+  // Subtle dot pattern background
+  background-image: radial-gradient(var(--gray) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -16px -16px;
+
+  // Add a subtle gradient overlay to fade out the edges and keep text readable
+  &::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background: radial-gradient(circle at center, transparent 0%, var(--light) 80%);
+    pointer-events: none;
+  }
+}
+
+// Soften dots in dark mode and light mode using opacity on the gradient
+[saved-theme="light"] body {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+}
+
+[saved-theme="dark"] body {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Global page loading
+.page {
+  animation: fadeIn 0.4s ease-out;
+}
+
+// Homepage specific animations
+.page[data-slug="index"] {
+  .hero-section {
+    .profile-pic {
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+    .intro {
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+    }
+  }
+
+  // Make the items slide up sequentially inside recent notes
+  // The afterBody section sits below center, let's target .recent-notes globally on index
+  .recent-notes {
+    // Only target the direct heading, not the note titles inside the list
+    > h3 {
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+    }
+
+    .recent-ul li.recent-li {
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{0.2 + ($i * 0.05)}s;
+          // Ensure tags inside this li don't run their own separate animation delay
+          .tags {
+            animation: none;
+          }
+        }
+      }
+
+      // Ensure the note titles inside don't run a separate animation
+      h3 {
+        animation: none;
+      }
+    }
+
+    // Target the "See more" link
+    > p {
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.45s backwards;
+    }
+
+    // Delay the second block (Recent Blogs) completely
+    &:nth-of-type(2) {
+      > h3 {
+        animation-delay: 0.4s;
+      }
+      .recent-ul li.recent-li {
+        @for $i from 1 through 10 {
+          &:nth-child(#{$i}) {
+            animation-delay: #{0.4 + ($i * 0.05)}s;
+          }
+        }
+      }
+      > p {
+        animation-delay: 0.65s;
+      }
+    }
+  }
+}
+
+// Content pages loading animations
+.page:not([data-slug="index"]) {
+  .article-title {
+    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  // content-meta transition removed
+
+  article {
+    > * {
+      animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
+    }
+  }
+}
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+  margin: 3rem 0;
+
+  @media (min-width: 600px) {
+    flex-direction: row;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
+.profile-pic {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--lightgray);
+  margin: 0; // Override default image margins
+}
+
+.intro {
+  max-width: 500px;
+
+  h1 {
+    font-size: 2.5rem !important; // Increased for a bolder statement
+    margin-top: 0 !important;
+    margin-bottom: 0.8rem !important;
+    letter-spacing: -0.03em;
+    font-weight: 500;
+    
+    .love {
+      color: var(--tertiary); // Orange accent for "Love"
+    }
+    
+    u {
+      text-decoration-color: var(--tertiary);
+      text-decoration-thickness: 3px;
+      text-underline-offset: 4px;
+    }
+
+    .dimmed {
+      color: var(--gray);
+      font-size: 1.5rem;
+      font-weight: 400;
+      opacity: 0.7;
+    }
+  }
+
+  .amp {
+    color: var(--tertiary);
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  blockquote {
+    margin: 1rem 0 0 0;
+    padding: 1rem 1.5rem;
+    border-left: 3px solid var(--tertiary);
+    background: rgba(var(--tertiary-rgb, 224, 64, 6), 0.05); // Subtle orange background tint
+    border-radius: 0 8px 8px 0;
+    
+    p {
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+
+    cite {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--tertiary);
+      font-weight: 600;
+      text-align: right;
+    }
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: var(--darkgray);
+    margin: 0;
+    
+    u {
+      text-decoration-color: var(--tertiary);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+      opacity: 0.8;
+    }
+  }
+}
+
+// Hide article title on homepage since we have our custom hero
+.page .article-title:first-child {
+  display: none;
+}
+
+// Override recent notes styling for a cleaner look
+.recent-notes {
+  margin-top: 3rem;
+
+  h3 {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(
+      --darkgray
+    ); // Using darkgray to sit between too light (--gray) and too bold (--dark)
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+
+  .recent-ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--lightgray);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+// === SPACING REFINEMENTS ===
+// Reduced from 2rem to 1rem for minimal header margin
+.page > #quartz-body .page-header {
+  margin-top: 1rem;
+}
+
+// Footer: reduced from 4rem to 2rem
+.page > #quartz-body footer {
+  margin-top: 2rem;
+}
+
+// Header component margin reduction
+header {
+  margin-top: 1rem !important;
+}
+
+// Article title spacing
+.article-title {
+  margin-top: 1.5rem !important;
+}
+
+// === TYPOGRAPHY REFINEMENTS ===
+// H1 refined: smaller for minimal look
+h1 {
+  font-size: 1.5rem !important;
+  margin-top: 1.75rem !important;
+}
+
+// Increase base font size and line-height for readability
+p,
+li,
+td {
+  font-size: 1.1rem; // Bumped up slightly from default 1rem
+  line-height: 1.7 !important;
+}
+
+// === LINK TREATMENT ===
+// Subtle links - reduce background highlight
+a.internal {
+  background-color: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-weight: 400 !important;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+// === MICRO-INTERACTIONS ===
+// Smooth transitions
+a,
+button {
+  transition: all 0.2s ease !important;
+}
+
+// Footer link hover
+footer a {
+  opacity: 0.7;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease !important;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// === COLOUR REFINEMENTS ===
+// Meta text subtler
+.meta {
+  opacity: 0.6;
+}
+
+// TOC less prominent
+.toc {
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// === DARK MODE TOGGLE ===
+.darkmode {
+  transition: transform 0.2s ease !important;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
