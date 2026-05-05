@@ -27,7 +27,8 @@ npm run format   # Auto-format
 
 ### CSS (main styling)
 
-- `quartz/styles/custom.scss` — your CSS overrides
+- `quartz/styles/base.scss` — Core Quartz layout grids, variables, and defaults. Keep structural modifications here minimal to ease upstream Quartz updates.
+- `quartz/styles/custom.scss` — Your CSS overrides, aesthetics, and custom component styles. This is the primary place for visual changes.
 - `quartz/styles/syntax.scss` — code highlighting theme
 
 ### Components
@@ -57,6 +58,7 @@ npm run format   # Auto-format
 
 ## Implementation Discoveries & Context
 
+- **Sticky Elements & Overflows**: Avoid using `overflow-x: hidden` on parent elements like `html` or `body` as it breaks `position: sticky` on child elements (like the `.sidebar`). Use `overflow-x: clip` instead.
 - **Homepage (`content/index.md`)**: Actively uses raw HTML block elements (`<div class="hero-section">`) rather than just markdown to enable complex flexbox layouts and specific DOM styling.
 - **Animation Targeting**: Global transitions (like `fadeUp`) can easily collide with nested component elements. Always scope animations explicitly (e.g. `> h3` instead of `h3`) and actively disable (`animation: none`) nested animations if the parent handles the transition, especially for `.tags` and nested headers.
 - **Quartz `RecentNotes` component**: The CSS class `.recent-notes` contains nested `h3` tags and `.tags` lists. When animating this component, avoid selecting nested tags universally.
