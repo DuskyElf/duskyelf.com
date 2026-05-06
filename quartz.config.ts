@@ -14,7 +14,7 @@ const config: QuartzConfig = {
     enablePopovers: true,
     analytics: null,
     locale: "en-US",
-    baseUrl: "duskyelf.github.io",
+    baseUrl: "duskyelf.com",
     ignorePatterns: ["private", "templates/", ".obsidian"],
     defaultDateType: "modified",
     theme: {
