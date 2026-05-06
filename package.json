@@ -2,7 +2,7 @@
   "name": "duskyelf.com",
   "description": "Dusky's little website built with Quartz",
   "private": true,
-  "version": "4.5.2",
+  "version": "4.6.0-dusky",
   "type": "module",
   "author": "duskyelf <git@duskyelf.com>",
   "license": "MIT",
