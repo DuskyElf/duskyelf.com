@@ -1,66 +1,57 @@
 # AGENTS.md — DustyElf.com
 
-## Project
+## Role
 
-Personal digital garden/blog. Static site built with Quartz 4 → GitHub Pages.
+This file is the agent’s operating law for the repo.
 
-## What This Agent Handles
+## Prime Law
 
-- **Dev**: Running server, type checks, debugging
-- **UI**: Tweaks to existing components or adding new ones
-- **NOT content**: Blog posts/notes are written manually by the human.
+Read the doc for the surface you are touching. Do not act from memory.
 
-## Tech Stack
+- Components / inline scripts — [`docs/advanced/creating components.md`](docs/advanced/creating%20components.md)
+- Plugins / filters / emitters — [`docs/advanced/making plugins.md`](docs/advanced/making%20plugins.md)
+- Layout — [`docs/layout-components.md`](docs/layout-components.md), [`docs/layout.md`](docs/layout.md)
+- Theme — [`docs/configuration.md`](docs/configuration.md)
+- Content — [`docs/authoring content.md`](docs/authoring%20content.md)
+- Repo vocabulary — [`docs/agents/domain.md`](docs/agents/domain.md)
+- Issues / labels — [`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md), [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md)
 
-- Quartz 4.5.2 (SSG), Preact, TypeScript
-- Node ≥22, npm ≥10.9.2
+## Agent skills
 
-## Dev Commands
+- **Issue tracker** — GitHub Issues via `gh`. [`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md)
+- **Triage labels** — `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md)
+- **Quartz + repo docs** — read root `CONTEXT.md` for the repo's custom Quartz layer. [`docs/agents/domain.md`](docs/agents/domain.md)
 
-```bash
-npm run docs      # Build & serve locally (http://localhost:8080)
-npm run check    # TS + Prettier check
-npm run format   # Auto-format
-```
+## System Shape
 
-## UI Customization Points
+Quartz 4 with a custom authored layer.
 
-### CSS (main styling)
+- `content/` → source pages
+- `quartz/` → framework layer
+- `quartz.components` / `quartz.plugins` → extension points
+- `quartz.layout.ts` → page regions
+- `quartz/styles/custom.scss` → site voice
 
-- `quartz/styles/base.scss` — Core Quartz layout grids, variables, and defaults. Keep structural modifications here minimal to ease upstream Quartz updates.
-- `quartz/styles/custom.scss` — Your CSS overrides, aesthetics, and custom component styles. This is the primary place for visual changes.
-- `quartz/styles/syntax.scss` — code highlighting theme
+## Hard Boundaries
 
-### Components
+- `quartz/` is upstream-adjacent; record framework changes in `QUARTZ_CHANGES.md`
+- `docs/` is Quartz documentation
+- `docs/agents/` is repo-owned doctrine and vocabulary
 
-- `quartz/components/` — React/Preact components
-- Layout defined in `quartz/layout.ts`
+## Working Surfaces
 
-### Theme Config
+- Components / inline scripts → `quartz/components/` / `quartz/components/scripts/*.inline.ts`
+- Transformers / filters / emitters → `quartz/plugins/*`
+- Layout → `quartz.layout.ts`
+- Theme → `quartz.config.ts`, `quartz/styles/custom.scss`
 
-- `quartz.config.ts` — colors, fonts, plugins
+## Operational Memory
 
-## Design
+- `overflow-x: clip` preserves sticky children; `overflow-x: hidden` breaks them.
+- The homepage uses raw HTML blocks for complex structure.
+- Global animations must be scoped.
+- `RecentNotes` has nested headings and tags; avoid broad selectors.
 
-- Use **frontend-design** skill for aesthetic guidance
-- Fonts: Schibsted Grotesk (headers), Source Sans Pro (body), IBM Plex Mono (code)
-- Primary accent: orange (#e04006 / #ff5a1f dark)
-- Avoid generic AI aesthetics — make it distinct
+## Tone
 
-## Key Files
-
-| File                        | Purpose             |
-| --------------------------- | ------------------- |
-| `quartz.config.ts`          | Site config         |
-| `quartz.layout.ts`          | Layout & components |
-| `quartz/styles/custom.scss` | Your CSS            |
-| `QUARTZ_CHANGES.md`         | Log of core edits   |
-| `content/`                  | Markdown content    |
-
-## Implementation Discoveries & Context
-
-- **Sticky Elements & Overflows**: Avoid using `overflow-x: hidden` on parent elements like `html` or `body` as it breaks `position: sticky` on child elements (like the `.sidebar`). Use `overflow-x: clip` instead.
-- **Homepage (`content/index.md`)**: Actively uses raw HTML block elements (`<div class="hero-section">`) rather than just markdown to enable complex flexbox layouts and specific DOM styling.
-- **Animation Targeting**: Global transitions (like `fadeUp`) can easily collide with nested component elements. Always scope animations explicitly (e.g. `> h3` instead of `h3`) and actively disable (`animation: none`) nested animations if the parent handles the transition, especially for `.tags` and nested headers.
-- **Quartz `RecentNotes` component**: The CSS class `.recent-notes` contains nested `h3` tags and `.tags` lists. When animating this component, avoid selecting nested tags universally.
-- **Dark Mode Dividers/Graphs**: Ensure `--lightgray` in dark mode (`quartz.config.ts`) is bright enough (e.g. `#2a2a2a`) to be visible against the `#050505` background; the default `#1a1a1a` renders borders and graph node connections practically invisible.
+Use repo vocabulary. Be brief. No action without the right doc context.
