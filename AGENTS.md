@@ -1,9 +1,3 @@
-# AGENTS.md — DustyElf.com
-
-## Role
-
-This file is the agent’s operating law for the repo.
-
 ## Prime Law
 
 Read the doc for the surface you are touching. Do not act from memory.
