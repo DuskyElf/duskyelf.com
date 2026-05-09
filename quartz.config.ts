@@ -70,6 +70,7 @@ const config: QuartzConfig = {
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
       Plugin.Description(),
       Plugin.Latex({ renderEngine: "katex" }),
+      Plugin.Excalidraw(),
     ],
     filters: [Plugin.RemoveDrafts()],
     emitters: [
@@ -88,6 +89,7 @@ const config: QuartzConfig = {
       Plugin.NotFoundPage(),
       // Comment out CustomOgImages to speed up build time
       Plugin.CustomOgImages(),
+      Plugin.ExcalidrawSvg(),
     ],
   },
 }
