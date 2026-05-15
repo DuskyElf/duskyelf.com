@@ -12,7 +12,8 @@ export default ((opts?: Options) => {
     return (
       <footer class={`${displayClass ?? ""}`}>
         <p>
-          Code licensed under <a href="https://opensource.org/license/mit/">MIT</a>, content under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. 
+          Code licensed under <a href="https://opensource.org/license/mit/">MIT</a>, content under{" "}
+          <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
           <br />
           DuskyElf © {year}
         </p>

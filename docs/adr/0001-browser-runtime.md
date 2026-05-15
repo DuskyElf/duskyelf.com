@@ -30,11 +30,13 @@ Avoids ~80MB download and ensures CI matches local development environment exact
 ## Consequences
 
 ### Positive
+
 - Consistent Chromium version across local/CI via flake.nix
 - Smaller npm install (puppeteer-core vs puppeteer bundle)
 - CI can use `browser-actions/setup-chrome` which handles Ubuntu deps automatically
 
 ### Negative
+
 - macOS/Windows users need to install Chromium separately (not via flake)
 - `PUPPETEER_EXECUTABLE_PATH` must be set or Chromium must be on PATH
 

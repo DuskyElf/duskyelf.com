@@ -171,11 +171,11 @@ body {
     margin-bottom: 0.8rem !important;
     letter-spacing: -0.03em;
     font-weight: 500;
-    
+
     .love {
       color: var(--tertiary); // Orange accent for "Love"
     }
-    
+
     u {
       text-decoration-color: var(--tertiary);
       text-decoration-thickness: 3px;
@@ -202,7 +202,7 @@ body {
     border-left: 3px solid var(--tertiary);
     background: rgba(var(--tertiary-rgb, 224, 64, 6), 0.05); // Subtle orange background tint
     border-radius: 0 8px 8px 0;
-    
+
     p {
       font-style: italic;
       margin-bottom: 0.5rem;
@@ -221,7 +221,7 @@ body {
     font-size: 1.1rem;
     color: var(--darkgray);
     margin: 0;
-    
+
     u {
       text-decoration-color: var(--tertiary);
       text-decoration-thickness: 2px;
