@@ -39,7 +39,7 @@ async function mouseEnterHandler(
     }
   }
 
-  const targetUrl = new URL(link.href)
+  const targetUrl = new URL(link.getAttribute("href") ?? "", window.location.href)
   const hash = decodeURIComponent(targetUrl.hash)
   targetUrl.hash = ""
   targetUrl.search = ""
@@ -120,8 +120,7 @@ function clearActivePopover() {
   allPopoverElements.forEach((popoverElement) => popoverElement.classList.remove("active-popover"))
 }
 
-document.addEventListener("nav", () => {
-  const links = [...document.querySelectorAll("a.internal")] as HTMLAnchorElement[]
+export function attachPopoverListeners(links: HTMLAnchorElement[]) {
   for (const link of links) {
     link.addEventListener("mouseenter", mouseEnterHandler)
     link.addEventListener("mouseleave", clearActivePopover)
@@ -130,4 +129,9 @@ document.addEventListener("nav", () => {
       link.removeEventListener("mouseleave", clearActivePopover)
     })
   }
+}
+
+document.addEventListener("nav", () => {
+  const links = [...document.querySelectorAll("a.internal")] as HTMLAnchorElement[]
+  attachPopoverListeners(links)
 })
