@@ -8,7 +8,8 @@
  * assuming mobile < desktop
  */
 $breakpoints: (
-  mobile: 900px, // Increased from 800px to allow more main content width
+  mobile: 900px,
+  // Increased from 800px to allow more main content width
   desktop: 1300px, // Increased from 1200px to balance the grid
 );
 

@@ -5,16 +5,16 @@ on:
     branches:
       - v4
     paths:
-      - '**.excalidraw'
-      - 'scripts/browser-runtime.mjs'
-      - 'quartz/plugins/excalidraw*'
-      - 'quartz/components/scripts/*excalidraw*'
+      - "**.excalidraw"
+      - "scripts/browser-runtime.mjs"
+      - "quartz/plugins/excalidraw*"
+      - "quartz/components/scripts/*excalidraw*"
   pull_request:
     paths:
-      - '**.excalidraw'
-      - 'scripts/browser-runtime.mjs'
-      - 'quartz/plugins/excalidraw*'
-      - 'quartz/components/scripts/*excalidraw*'
+      - "**.excalidraw"
+      - "scripts/browser-runtime.mjs"
+      - "quartz/plugins/excalidraw*"
+      - "quartz/components/scripts/*excalidraw*"
   workflow_dispatch:
 
 jobs:

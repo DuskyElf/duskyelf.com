@@ -2,6 +2,7 @@
 excalidraw-plugin: parsed
 tags: [excalidraw]
 ---
+
 # Drawing
 
 ```json
@@ -77,14 +78,8 @@ tags: [excalidraw]
       "link": null,
       "locked": false,
       "points": [
-        [
-          0,
-          0
-        ],
-        [
-          48,
-          -3
-        ]
+        [0, 0],
+        [48, -3]
       ],
       "startBinding": null,
       "endBinding": null,
@@ -122,14 +117,8 @@ tags: [excalidraw]
       "link": null,
       "locked": false,
       "points": [
-        [
-          0,
-          0
-        ],
-        [
-          -54,
-          -2
-        ]
+        [0, 0],
+        [-54, -2]
       ],
       "startBinding": null,
       "endBinding": null,
@@ -167,14 +156,8 @@ tags: [excalidraw]
       "link": null,
       "locked": false,
       "points": [
-        [
-          0,
-          0
-        ],
-        [
-          239,
-          -9
-        ]
+        [0, 0],
+        [239, -9]
       ],
       "startBinding": null,
       "endBinding": null,
@@ -323,14 +306,8 @@ tags: [excalidraw]
       "link": null,
       "locked": false,
       "points": [
-        [
-          0,
-          0
-        ],
-        [
-          89,
-          2
-        ]
+        [0, 0],
+        [89, 2]
       ],
       "startBinding": null,
       "endBinding": null,
@@ -368,14 +345,8 @@ tags: [excalidraw]
       "link": null,
       "locked": false,
       "points": [
-        [
-          0,
-          0
-        ],
-        [
-          79,
-          0
-        ]
+        [0, 0],
+        [79, 0]
       ],
       "startBinding": null,
       "endBinding": null,
@@ -413,14 +384,8 @@ tags: [excalidraw]
       "link": null,
       "locked": false,
       "points": [
-        [
-          0,
-          0
-        ],
-        [
-          231,
-          0
-        ]
+        [0, 0],
+        [231, 0]
       ],
       "startBinding": null,
       "endBinding": null,
@@ -569,14 +534,8 @@ tags: [excalidraw]
       "link": null,
       "locked": false,
       "points": [
-        [
-          0,
-          0
-        ],
-        [
-          48,
-          -3
-        ]
+        [0, 0],
+        [48, -3]
       ],
       "startBinding": null,
       "endBinding": null,
@@ -614,14 +573,8 @@ tags: [excalidraw]
       "link": null,
       "locked": false,
       "points": [
-        [
-          0,
-          0
-        ],
-        [
-          -54,
-          -2
-        ]
+        [0, 0],
+        [-54, -2]
       ],
       "startBinding": null,
       "endBinding": null,
@@ -659,14 +612,8 @@ tags: [excalidraw]
       "link": null,
       "locked": false,
       "points": [
-        [
-          0,
-          0
-        ],
-        [
-          239,
-          -9
-        ]
+        [0, 0],
+        [239, -9]
       ],
       "startBinding": null,
       "endBinding": null,

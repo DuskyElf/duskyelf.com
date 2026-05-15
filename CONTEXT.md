@@ -1,45 +1,57 @@
 # Context — DustyElf.com
 
-*Quartz 4 digital garden and personal blog with a custom authored layer on top of the upstream framework.*
+_Quartz 4 digital garden and personal blog with a custom authored layer on top of the upstream framework._
 
 ---
 
 ## Glossary
 
 ### Site
+
 The generated static site: HTML, CSS, and assets deployed to GitHub Pages.
 
 ### Content
+
 Markdown in `content/`. This is the authored source of truth.
 
 ### Docs
+
 Quartz documentation in `docs/`. These are reference texts for Quartz behavior.
 
 ### Repo Docs
+
 `docs/agents/`. Repo-owned doctrine, vocabulary, and workflow rules. Not Quartz.
 
 ### QUARTZ_CHANGES.md
+
 The record of framework-adjacent edits and why they exist.
 
 ### Component
+
 A Preact/React function in `quartz/components/` that renders one part of the page tree.
 
 ### Inline Script
+
 A `.inline.ts` file in `quartz/components/scripts/` that is bundled for browser execution.
 
 ### Layout
+
 The arrangement of components into page regions, defined in `quartz.layout.ts`.
 
 ### Theme
+
 The site’s visual language: colors, typography, spacing, and motion.
 
 ### Transformer
+
 A plugin that changes content during the parse/transform phase.
 
 ### Filter
+
 A plugin that decides whether content is published.
 
 ### Emitter
+
 A plugin that produces output artifacts such as HTML, JSON, RSS, sitemap, or image assets.
 
 ---
@@ -49,21 +61,27 @@ A plugin that produces output artifacts such as HTML, JSON, RSS, sitemap, or ima
 The custom layer extends Quartz through authored content, components, plugins, layout composition, and styling.
 
 ### Render Path
+
 `content/` → Quartz pipeline → emitters → static site
 
 ### Component Path
+
 Components receive page data and render into layout slots such as `head`, `header`, `left`, `right`, `beforeBody`, `afterBody`, and `footer`.
 
 ### Plugin Path
+
 Transformers modify content, filters narrow publication, emitters materialize output.
 
 ### Script Path
+
 Inline scripts attach to components, bundle through Quartz, and run in the browser after DOM lifecycle points such as `beforeDOMLoaded` and `afterDOMLoaded`.
 
 ### Style Path
+
 Styles layer from Quartz base, then `quartz/styles/custom.scss`, then component-local CSS/SCSS.
 
 ### Layout Path
+
 `quartz.layout.ts` composes shared components and page-specific regions; higher-order wrappers like `Flex`, `DesktopOnly`, `MobileOnly`, and `ConditionalRender` modify placement and visibility.
 
 ---
@@ -108,11 +126,13 @@ Read these docs by surface:
 ## Deep Reference
 
 ### Extensions
+
 Prefer extending Quartz through components, plugins, layout bindings, and styles instead of forking framework code. If a framework-adjacent change is required, record it in `QUARTZ_CHANGES.md`.
 
 ### Interactivity
+
 Interactive behavior lives in scripts, not component event handlers. Scripts are attached explicitly and cleaned up across SPA navigation.
 
 ---
 
-*This file is for deeper conversations: vocabulary, boundaries, and how the system is assembled.*
+_This file is for deeper conversations: vocabulary, boundaries, and how the system is assembled._
