@@ -3,6 +3,7 @@ import { QuartzEmitterPlugin } from "../types"
 import { BrowserRuntime } from "../../../scripts/browser-runtime.mjs"
 import fs from "fs"
 import path from "path"
+import { validateExcalidrawEmbeds } from "../transformers/excalidraw"
 
 let browserRuntime: BrowserRuntime | null = null
 let runtimeLock = false
@@ -17,11 +18,14 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
       const fps: FilePath[] = []
       const excalidrawFiles = content.filter((c) => c[1].data.excalidraw)
 
+      // Validate embedded excalidraw files before emitting
+      validateExcalidrawEmbeds()
+
       if (excalidrawFiles.length === 0) return fps
 
       // Simple lock to avoid multiple builds spinning up browsers concurrently
       while (runtimeLock) {
-        await new Promise(r => setTimeout(r, 100))
+        await new Promise((r) => setTimeout(r, 100))
       }
       runtimeLock = true
 
@@ -35,8 +39,12 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
         const excalidraw = file.data.excalidraw
 
         try {
-          const svg = await browserRuntime.exportSvg(excalidraw.elements || [], excalidraw.appState || {}, excalidraw.files || {})
-          
+          const svg = await browserRuntime.exportSvg(
+            excalidraw.elements || [],
+            excalidraw.appState || {},
+            excalidraw.files || {},
+          )
+
           const svgPath = path.join(ctx.argv.output, `${slug}.svg`)
           fs.mkdirSync(path.dirname(svgPath), { recursive: true })
           fs.writeFileSync(svgPath, svg)
@@ -59,6 +67,6 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
       runtimeLock = false
 
       return fps
-    }
+    },
   }
 }
