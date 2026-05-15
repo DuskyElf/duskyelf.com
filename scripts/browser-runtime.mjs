@@ -88,7 +88,7 @@ class BrowserRuntime {
       throw new Error("ExcalidrawUtils not loaded")
     }
 
-    const svg = await page.evaluate(
+    let svg = await page.evaluate(
       async (els, state, f) => {
         return await window.exportToSvg(els, state, f)
       },
@@ -96,6 +96,31 @@ class BrowserRuntime {
       appState,
       files,
     )
+
+    // Add internal class to SVG links
+    svg = await page.evaluate((svgString) => {
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(svgString, "image/svg+xml")
+      const links = doc.querySelectorAll("a")
+      links.forEach((a) => {
+        const href = a.getAttribute("href")
+        if (!href) return
+        // Skip fragment-only links (intra-document)
+        if (href.startsWith("#")) return
+        // Skip external links
+        if (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:"))
+          return
+        // Skip if already has external class
+        const classes = (a.getAttribute("class") || "").split(" ").filter(Boolean)
+        if (classes.includes("external")) return
+        // Add internal class if missing
+        if (!classes.includes("internal")) {
+          classes.push("internal")
+          a.setAttribute("class", classes.join(" "))
+        }
+      })
+      return new XMLSerializer().serializeToString(doc)
+    }, svg)
 
     await page.close()
     return svg
