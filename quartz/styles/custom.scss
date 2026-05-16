@@ -351,6 +351,23 @@ footer a {
   }
 }
 
+// === EXCALIDRAW SVG THEMING ===
+// Use CSS filter for dark/light mode since Excalidraw doesn't natively export with dark colors
+img.excalidraw-svg,
+svg.excalidraw-svg,
+.excalidraw-embed img,
+.excalidraw-embed svg {
+  // Keep as-is in light mode
+}
+
+[saved-theme="dark"] img.excalidraw-svg,
+[saved-theme="dark"] svg.excalidraw-svg,
+[saved-theme="dark"] .excalidraw-embed img,
+[saved-theme="dark"] .excalidraw-embed svg {
+  // Invert colors: white bg → dark bg, dark stroke → light stroke
+  filter: invert(1) hue-rotate(180deg);
+}
+
 // === DARK MODE TOGGLE ===
 .darkmode {
   transition: transform 0.2s ease !important;

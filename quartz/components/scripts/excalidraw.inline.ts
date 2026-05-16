@@ -22,7 +22,7 @@ function inlineExcalidrawSvgs() {
 
         // Copy relevant attributes from img to svg
         if (imgEl.id) svg.setAttribute("id", imgEl.id)
-        if (imgEl.className) svg.setAttribute("class", imgEl.className)
+        svg.setAttribute("class", "excalidraw-svg")
         if (imgEl.style.cssText) svg.style.cssText = imgEl.style.cssText
         if (imgEl.getAttribute("alt")) svg.setAttribute("aria-label", imgEl.getAttribute("alt")!)
 
