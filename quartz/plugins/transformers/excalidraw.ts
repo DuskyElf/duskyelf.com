@@ -1,7 +1,7 @@
 import { QuartzTransformerPlugin } from "../types"
-import { Root } from "mdast"
+import { Root, Html } from "mdast"
 import { visit } from "unist-util-visit"
-import { transformLink } from "../../util/path"
+import { transformLink, FullSlug, FilePath, slugifyFilePath } from "../../util/path"
 
 declare module "vfile" {
   interface DataMap {
@@ -12,21 +12,43 @@ declare module "vfile" {
 const embedsToValidate = new Set<{ sourceSlug: string; targetSlug: string; line: number }>()
 const knownExcalidrawSlugs = new Set<string>()
 
-function resolveExcalidrawTarget(sourceSlug: string, url: string, ctx: any): string {
+export function registerExcalidrawSlug(slug: FullSlug) {
+  knownExcalidrawSlugs.add(slug)
+}
+
+function stripExt(s: string) {
+  return s.replace(/\.(md|excalidraw)$/, "")
+}
+
+function resolveExcalidrawTarget(sourceSlug: FullSlug, url: string, ctx: any): string {
   url = url.replace(/\.md$/, "")
   url = url.replace(/^(\.\.\/|\.\/)?content\//, "")
   const resolved = transformLink(sourceSlug, url, { strategy: "absolute", allSlugs: ctx.allSlugs })
   return resolved.replace(/^\.\//, "")
 }
 
+/** Build a relative SVG path from source to target. Both slugs. */
+function embedSvgPath(sourceSlug: string, targetSlug: string): string {
+  return "../".repeat(sourceSlug.split("/").length - 1) + stripExt(targetSlug) + ".svg"
+}
+
 export const Excalidraw: QuartzTransformerPlugin = () => {
   return {
     name: "Excalidraw",
     markdownPlugins(ctx) {
+      // Pre-scan for .excalidraw files (they're data files, not .md — won't go through pipeline)
+      // Register their slugs so embed validation passes.
+      const excalidrawFiles = (ctx.allFiles || []).filter(
+        (fp: string) => fp.endsWith(".excalidraw") && !fp.endsWith(".excalidraw.md"),
+      )
+      for (const fp of excalidrawFiles) {
+        registerExcalidrawSlug(slugifyFilePath(fp as FilePath))
+      }
+
       return [
         () => {
           return (tree: Root, file) => {
-            const sourceSlug = file.data.slug!
+            const sourceSlug = file.data.slug! as FullSlug
             const isExcalidrawFile = sourceSlug.endsWith(".excalidraw")
 
             if (isExcalidrawFile) {
@@ -37,18 +59,43 @@ export const Excalidraw: QuartzTransformerPlugin = () => {
                     const parsed = JSON.parse(node.value)
                     if (parsed.type === "excalidraw") {
                       file.data.excalidraw = parsed
-                      const title = "Excalidraw Drawing"
-                      const slug = file.data.slug
+                      const svgSrc = stripExt(sourceSlug) + ".svg"
                       node.type = "html" as any
-                      node.value = `<div class="excalidraw-container"><img src="${slug}.svg" alt="${title}" class="excalidraw-svg" /></div>`
+                      node.value = `<div class="excalidraw-container"><img src="${svgSrc}" alt="Excalidraw Drawing" class="excalidraw-svg" /></div>`
                     }
                   } catch (e) {}
                 }
               })
             }
 
-            // Handle excalidraw embeds: ![alt](target.excalidraw.md)
-            // OFM parses markdown to HTML, so we inspect html nodes
+            // Handle excalidraw embeds: ![alt](target.excalidraw) or ![alt](target.excalidraw.md)
+            // After OFM text transforms, both ![]() and ![[wikilinks]] end up as image nodes.
+            visit(tree, "image", (node: any, index, parent) => {
+              const url = node.url
+              if (!url.match(/\.excalidraw(\.md)?$/)) return
+
+              const targetSlug = resolveExcalidrawTarget(sourceSlug, url, ctx)
+
+              if (targetSlug.endsWith(".excalidraw")) {
+                embedsToValidate.add({
+                  sourceSlug,
+                  targetSlug,
+                  line: node.position?.start?.line ?? 0,
+                })
+                const srcPath = embedSvgPath(sourceSlug, targetSlug)
+
+                const embedHtml: Html = {
+                  type: "html",
+                  value: `<div class="excalidraw-embed"><img src="${srcPath}" alt="${node.alt || ""}" /></div>`,
+                }
+
+                if (parent && index !== undefined) {
+                  parent.children.splice(index, 1, embedHtml)
+                }
+              }
+            })
+
+            // Also check raw HTML nodes (backward compat with any old syntax)
             visit(tree, "html", (node: any, _index, _parent) => {
               const html = node.value
               const match = html.match(/!\[([^\]]*)\]\(([^)]*\.excalidraw[^)]*)\)/)
@@ -62,8 +109,7 @@ export const Excalidraw: QuartzTransformerPlugin = () => {
                     targetSlug,
                     line: node.position?.start?.line ?? 0,
                   })
-                  const srcPath =
-                    "../".repeat(sourceSlug.split("/").length - 1) + targetSlug + ".svg"
+                  const srcPath = embedSvgPath(sourceSlug, targetSlug)
                   node.value = html.replace(
                     /!\[([^\]]*)\]\(([^)]*\.excalidraw[^)]*)\)/,
                     `<div class="excalidraw-embed"><img src="${srcPath}" alt="${alt}" /></div>`,
@@ -86,7 +132,7 @@ export function validateExcalidrawEmbeds() {
   for (const embed of embedsToValidate) {
     if (!knownExcalidrawSlugs.has(embed.targetSlug)) {
       missing.push(
-        `Embed target not found: ${embed.targetSlug} (referenced in ${embed.sourceSlug}.md:${embed.line})`,
+        `Embed target not found: ${embed.targetSlug} (referenced in ${embed.sourceSlug}:${embed.line})`,
       )
     }
   }
