@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excalidraw Editor</title>
+  <link rel="stylesheet" href="/excalidraw.css" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    #root { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="/excalidraw-lib.js"></script>
+  <script type="module">
+    const sendError = (message) => {
+      window.parent.postMessage({ type: 'excalidraw-error', message }, '*');
+    };
+
+    try {
+      const bundle = window.ExcalidrawLib;
+      if (!bundle?.Excalidraw) {
+        sendError('Excalidraw bundle did not load.');
+        throw new Error('Excalidraw bundle did not load');
+      }
+
+      const file = new URL(window.location.href).searchParams.get('file');
+      if (!file) {
+        sendError('Missing file parameter.');
+        throw new Error('Missing file parameter');
+      }
+      const apiUrl = `/api/excalidraw?file=${encodeURIComponent(file)}`;
+
+      let initialData = { elements: [] };
+      try {
+        const resp = await fetch(apiUrl);
+        if (resp.ok) {
+          const data = await resp.json();
+          initialData.elements = data.elements ?? [];
+        } else {
+          sendError(`Failed to load drawing (HTTP ${resp.status})`);
+          throw new Error(`Failed to load drawing: HTTP ${resp.status}`);
+        }
+      } catch (e) {
+        if (!e.message?.includes('Failed to load drawing')) {
+          sendError('Failed to load drawing data.');
+        }
+        throw e;
+      }
+
+      let latestElements = initialData.elements;
+      let latestAppState = {};
+
+      let appStateCaptured = false;
+
+      const { createElement } = React;
+      const { createRoot } = ReactDOM;
+      const root = createRoot(document.getElementById('root'));
+
+      const onChange = (elements, appState) => {
+        if (!appStateCaptured && appState) {
+          appStateCaptured = true;
+          latestAppState = appState;
+        }
+        latestElements = elements;
+        if (appState) latestAppState = appState;
+        window.parent.postMessage({ type: 'excalidraw-change', elements, appState }, '*');
+      };
+
+      root.render(createElement(bundle.Excalidraw, { initialData, onChange }));
+
+      window.addEventListener('message', (e) => {
+        if (e.data?.type === 'excalidraw-get-data') {
+          // Send the latest drawing data to the parent so it can POST from there
+          const data = {
+            type: 'excalidraw',
+            elements: latestElements,
+            appState: { ...latestAppState, collaborators: undefined },
+          };
+          window.parent.postMessage({ type: 'excalidraw-data', data }, '*');
+        }
+      });
+
+      window.parent.postMessage({ type: 'excalidraw-ready' }, '*');
+    } catch (e) {
+      sendError(e?.message || 'Unknown editor error');
+      console.error('[excalidraw-editor]', e);
+    }
+  </script>
+</body>
+</html>

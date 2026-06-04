@@ -369,6 +369,139 @@ export async function handleBuild(argv) {
       // strip baseDir prefix
       req.url = req.url?.slice(argv.baseDir.length)
 
+      // Handle React/Excalidraw JS routes
+      if (req.url === "/react.production.min.js") {
+        const reactPath = path.join(cwd, "node_modules", "react", "umd", "react.production.min.js")
+        try {
+          const js = await fs.promises.readFile(reactPath)
+          res.writeHead(200, { "Content-Type": "application/javascript" })
+          res.end(js)
+          return
+        } catch {
+          res.writeHead(404)
+          res.end("Not found")
+          return
+        }
+      }
+
+      if (req.url === "/react-dom.production.min.js") {
+        const reactDomPath = path.join(cwd, "node_modules", "react-dom", "umd", "react-dom.production.min.js")
+        try {
+          const js = await fs.promises.readFile(reactDomPath)
+          res.writeHead(200, { "Content-Type": "application/javascript" })
+          res.end(js)
+          return
+        } catch {
+          res.writeHead(404)
+          res.end("Not found")
+          return
+        }
+      }
+
+      if (req.url === "/excalidraw-lib.js") {
+        const jsPath = path.join(cwd, "quartz", "cli", "excalidraw-lib.js")
+        try {
+          const js = await fs.promises.readFile(jsPath)
+          res.writeHead(200, { "Content-Type": "application/javascript" })
+          res.end(js)
+          return
+        } catch {
+          res.writeHead(404)
+          res.end("Not found")
+          return
+        }
+      }
+
+      // Handle Excalidraw CSS route
+      if (req.url === "/excalidraw.css") {
+        const cssPath = path.join(cwd, "node_modules", "@excalidraw", "excalidraw", "dist", "prod", "index.css")
+        try {
+          const css = await fs.promises.readFile(cssPath)
+          res.writeHead(200, { "Content-Type": "text/css" })
+          res.end(css)
+          return
+        } catch {
+          res.writeHead(404)
+          res.end("Not found")
+          return
+        }
+      }
+
+      // Handle Excalidraw API routes
+      if (req.url?.startsWith("/api/excalidraw")) {
+        const url = new URL(req.url, "http://localhost")
+        const fileParam = url.searchParams.get("file")
+        if (!fileParam) {
+          res.writeHead(400, { "Content-Type": "application/json" })
+          res.end(JSON.stringify({ error: "Missing file parameter" }))
+          return
+        }
+
+        const filePath = path.join(cwd, "content", fileParam)
+
+        if (req.method === "GET") {
+          try {
+            const content = await fs.promises.readFile(filePath, "utf-8")
+            const jsonMatch = content.match(/```json\n([\s\S]*?)\n```/)
+            if (jsonMatch) {
+              const jsonStr = jsonMatch[1].trim()
+              try {
+                const json = JSON.parse(jsonStr)
+                res.writeHead(200, { "Content-Type": "application/json" })
+                res.end(JSON.stringify(json))
+                return
+              } catch {
+                res.writeHead(400, { "Content-Type": "application/json" })
+                res.end(JSON.stringify({ error: "Invalid JSON" }))
+                return
+              }
+            }
+            res.writeHead(400, { "Content-Type": "application/json" })
+            res.end(JSON.stringify({ error: "No JSON found" }))
+            return
+          } catch {
+            res.writeHead(404, { "Content-Type": "application/json" })
+            res.end(JSON.stringify({ error: "File not found" }))
+            return
+          }
+        } else if (req.method === "POST") {
+          let body = ""
+          req.on("data", chunk => { body += chunk })
+          req.on("end", async () => {
+            try {
+              const drawingData = JSON.parse(body)
+              const content = await fs.promises.readFile(filePath, "utf-8")
+              const nextJson = `\`\`\`json\n${JSON.stringify(drawingData, null, 2)}\n\`\`\``
+              const nextContent = content.replace(/```json\n[\s\S]*?\n```/, nextJson)
+              if (nextContent === content) {
+                throw new Error("JSON block not found")
+              }
+              await fs.promises.writeFile(filePath, nextContent, "utf-8")
+              res.writeHead(200, { "Content-Type": "application/json" })
+              res.end(JSON.stringify({ success: true }))
+            } catch (e) {
+              res.writeHead(500, { "Content-Type": "application/json" })
+              res.end(JSON.stringify({ error: e.message }))
+            }
+          })
+          return
+        }
+      }
+
+      // Serve Excalidraw editor HTML
+      if (req.url === "/excalidraw" || req.url?.startsWith("/excalidraw?")) {
+        const editorPath = path.join(cwd, "quartz", "cli", "excalidraw-editor.html")
+        try {
+          const html = await fs.promises.readFile(editorPath, "utf-8")
+          res.writeHead(200, { "Content-Type": "text/html" })
+          res.end(html)
+        } catch {
+          res.writeHead(500)
+          res.end("Editor not found")
+        }
+        return
+      }
+
       const serve = async () => {
         const release = await buildMutex.acquire()
         await serveHandler(req, res, {
