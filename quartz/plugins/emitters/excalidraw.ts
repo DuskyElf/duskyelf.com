@@ -1,12 +1,16 @@
-import { FilePath } from "../../util/path"
+import { FilePath, slugifyFilePath } from "../../util/path"
 import { QuartzEmitterPlugin } from "../types"
 import { BrowserRuntime } from "../../../scripts/browser-runtime.mjs"
 import fs from "fs"
 import path from "path"
-import { validateExcalidrawEmbeds } from "../transformers/excalidraw"
+import { validateExcalidrawEmbeds, registerExcalidrawSlug } from "../transformers/excalidraw"
 
 let browserRuntime: BrowserRuntime | null = null
 let runtimeLock = false
+
+function stripExt(s: string) {
+  return s.replace(/\.(md|excalidraw)$/, "")
+}
 
 export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
   return {
@@ -14,16 +18,29 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
     getQuartzComponents() {
       return []
     },
-    async emit(ctx, content, resources): Promise<FilePath[]> {
+    async emit(ctx, content, _resources): Promise<FilePath[]> {
       const fps: FilePath[] = []
-      const excalidrawFiles = content.filter((c) => c[1].data.excalidraw)
 
-      // Validate embedded excalidraw files before emitting
+      // ── Scan .excalidraw files from the filesystem ────────────
+      // They're not .md so they bypass the pipeline; we read them directly.
+      const allFiles: string[] = ctx.allFiles || []
+      const excalidrawPaths = allFiles.filter((fp) => fp.endsWith(".excalidraw") && !fp.endsWith(".excalidraw.md"))
+
+      // ── Gather pipeline-processed excalidraw content ──────────
+      const pipelineExcalidraw = content.filter((c) => c[1].data.excalidraw)
+
+      // ── Register all known slugs before validation ────────────
+      // (pipeline slugs are already registered by the transformer)
+      for (const fp of excalidrawPaths) {
+        registerExcalidrawSlug(slugifyFilePath(fp as FilePath))
+      }
+
+      // ── Validate embeds ──────────────────────────────────────
       validateExcalidrawEmbeds()
 
-      if (excalidrawFiles.length === 0) return fps
+      if (pipelineExcalidraw.length === 0 && excalidrawPaths.length === 0) return fps
 
-      // Simple lock to avoid multiple builds spinning up browsers concurrently
+      // ── Start browser runtime ─────────────────────────────────
       while (runtimeLock) {
         await new Promise((r) => setTimeout(r, 100))
       }
@@ -34,7 +51,8 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
         await browserRuntime.start()
       }
 
-      for (const [_, file] of excalidrawFiles) {
+      // ── Process pipeline content (.excalidraw.md files) ──────
+      for (const [_, file] of pipelineExcalidraw) {
         const slug = file.data.slug!
         const excalidraw = file.data.excalidraw
 
@@ -45,7 +63,7 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
             excalidraw.files || {},
           )
 
-          const svgPath = path.join(ctx.argv.output, `${slug}.svg`)
+          const svgPath = path.join(ctx.argv.output, `${stripExt(slug)}.svg`)
           fs.mkdirSync(path.dirname(svgPath), { recursive: true })
           fs.writeFileSync(svgPath, svg)
           fps.push(svgPath as FilePath)
@@ -54,8 +72,31 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
         }
       }
 
-      // If in serve mode or build mode, we don't stop the browser runtime
-      // so it can be reused on subsequent builds
+      // ── Process .excalidraw files from filesystem ─────────────
+      for (const fp of excalidrawPaths) {
+        const fullPath = path.join(ctx.argv.directory, fp)
+        try {
+          const raw = await fs.promises.readFile(fullPath, "utf-8")
+          const excalidraw = JSON.parse(raw)
+          if (excalidraw.type !== "excalidraw") continue
+
+          const slug = slugifyFilePath(fp as FilePath)
+          const svg = await browserRuntime.exportSvg(
+            excalidraw.elements || [],
+            excalidraw.appState || {},
+            excalidraw.files || {},
+          )
+
+          const svgPath = path.join(ctx.argv.output, `${stripExt(slug)}.svg`)
+          fs.mkdirSync(path.dirname(svgPath), { recursive: true })
+          fs.writeFileSync(svgPath, svg)
+          fps.push(svgPath as FilePath)
+        } catch (e) {
+          console.error(`Error exporting Excalidraw for ${fp}:`, e)
+        }
+      }
+
+      // ── Cleanup ───────────────────────────────────────────────
       const isServeMode = ctx.argv.serve === true
       if (isServeMode) {
         runtimeLock = false
