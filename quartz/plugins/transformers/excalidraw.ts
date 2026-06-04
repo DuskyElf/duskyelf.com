@@ -40,7 +40,7 @@ export const Excalidraw: QuartzTransformerPlugin = () => {
                       const title = "Excalidraw Drawing"
                       const slug = file.data.slug
                       node.type = "html" as any
-                      node.value = `<div class="excalidraw-container"><img src="${slug}.svg" alt="${title}" class="excalidraw-svg" data-original-file="${slug}.md" /></div>`
+                      node.value = `<div class="excalidraw-container"><img src="${slug}.svg" alt="${title}" class="excalidraw-svg" /></div>`
                     }
                   } catch (e) {}
                 }
@@ -62,11 +62,11 @@ export const Excalidraw: QuartzTransformerPlugin = () => {
                     targetSlug,
                     line: node.position?.start?.line ?? 0,
                   })
-                  const srcPath = targetSlug + ".svg"
-                  const originalFile = targetSlug + ".md"
+                  const srcPath =
+                    "../".repeat(sourceSlug.split("/").length - 1) + targetSlug + ".svg"
                   node.value = html.replace(
                     /!\[([^\]]*)\]\(([^)]*\.excalidraw[^)]*)\)/,
-                    `<div class="excalidraw-embed"><img src="${srcPath}" alt="${alt}" data-original-file="${originalFile}" /></div>`,
+                    `<div class="excalidraw-embed"><img src="${srcPath}" alt="${alt}" /></div>`,
                   )
                 }
               }
