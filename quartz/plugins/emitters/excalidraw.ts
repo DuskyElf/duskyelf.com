@@ -57,8 +57,11 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
         const excalidraw = file.data.excalidraw
 
         try {
+          const elements = (excalidraw.elements || []).filter(
+            (el: any) => !el.isDeleted,
+          )
           const svg = await browserRuntime.exportSvg(
-            excalidraw.elements || [],
+            elements,
             excalidraw.appState || {},
             excalidraw.files || {},
           )
@@ -81,8 +84,11 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
           if (excalidraw.type !== "excalidraw") continue
 
           const slug = slugifyFilePath(fp as FilePath)
+          const elements = (excalidraw.elements || []).filter(
+            (el: any) => !el.isDeleted,
+          )
           const svg = await browserRuntime.exportSvg(
-            excalidraw.elements || [],
+            elements,
             excalidraw.appState || {},
             excalidraw.files || {},
           )
@@ -96,7 +102,7 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
         }
       }
 
-      // ── Cleanup ───────────────────────────────────────────────
+      // ── Browser runtime cleanup ───────────────────────────────
       const isServeMode = ctx.argv.serve === true
       if (isServeMode) {
         runtimeLock = false

@@ -356,6 +356,34 @@ footer a {
 // which swaps fill/stroke attributes on the SVG elements directly.
 // This provides proper text color switching that CSS filter cannot achieve.
 
+.excalidraw-embed {
+  margin: 2rem auto;
+  max-width: min(100%, 600px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .excalidraw-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.excalidraw-container {
+  margin: 2rem auto;
+  max-width: min(100%, 600px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .excalidraw-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
 // === DARK MODE TOGGLE ===
 .darkmode {
   transition: transform 0.2s ease !important;
