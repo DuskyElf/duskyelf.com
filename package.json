@@ -4,7 +4,7 @@
   "private": true,
   "version": "4.6.0-dusky",
   "type": "module",
-  "author": "duskyelf <git@duskyelf.com>",
+  "author": "duskyelf",
   "license": "MIT",
   "homepage": "https://duskyelf.com",
   "repository": {
@@ -12,12 +12,14 @@
     "url": "https://github.com/DuskyElf/duskyelf.com.git"
   },
   "scripts": {
-    "quartz": "./quartz/bootstrap-cli.mjs",
+    "quartz": "node ./quartz/bootstrap-cli.mjs",
     "docs": "npx quartz build --serve -d docs",
     "check": "tsc --noEmit && npx prettier . --check",
     "format": "npx prettier . --write",
     "test": "tsx --test",
-    "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1"
+    "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
+    "wrangler": "node node_modules/wrangler/bin/wrangler.js",
+    "deploy": "npm run quartz -- build && npm run wrangler -- pages deploy public --project-name=duskyelf"
   },
   "engines": {
     "npm": ">=10.9.2",
@@ -112,6 +114,7 @@
     "prettier": "^3.8.1",
     "puppeteer-core": "^24.0.0",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.99.0"
   }
 }

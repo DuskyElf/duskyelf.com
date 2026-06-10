@@ -1,10 +1,8 @@
 ---
 title: Zero JS, Pure CSS ToDo App
+date: 2025-4-11
 tags:
   - web
-  - css
-aliases: []
-id: pure-css-todo-app
 ---
 
 Checkout - https://duskyelf.github.io/todo-css/ <br />
