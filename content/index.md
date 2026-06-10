@@ -3,7 +3,7 @@ title: DuskyElf
 ---
 
 <div class="hero-section">
-  <img src="https://github.com/duskyelf.png" alt="Profile Picture" class="profile-pic" />
+  <img src="duskyelf.png" alt="Profile Picture" class="profile-pic" />
   
   <div class="intro">
     <h1>I <span class="love">Love</span> <u>Science</u> <span class="dimmed">&amp; computers</span></h1>
