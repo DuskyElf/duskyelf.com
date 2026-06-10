@@ -15,7 +15,7 @@ const config: QuartzConfig = {
     analytics: null,
     locale: "en-US",
     baseUrl: "duskyelf.com",
-    ignorePatterns: ["private", "templates/", ".obsidian"],
+    ignorePatterns: ["private", "templates/", ".obsidian", "**/.gitkeep"],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",

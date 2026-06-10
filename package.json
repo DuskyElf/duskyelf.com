@@ -19,7 +19,8 @@
     "test": "tsx --test",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
     "wrangler": "node node_modules/wrangler/bin/wrangler.js",
-    "deploy": "npm run quartz -- build && npm run wrangler -- pages deploy public --project-name=duskyelf"
+    "sequoia": "node node_modules/sequoia-cli/dist/index.js",
+    "deploy": "npm run sequoia -- publish && npm run quartz -- build && npm run wrangler -- pages deploy public --project-name=duskyelf"
   },
   "engines": {
     "npm": ">=10.9.2",
@@ -38,7 +39,7 @@
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
-    "@excalidraw/excalidraw": "^0.18.1",
+    "@excalidraw/excalidraw": "^0.17.6",
     "@excalidraw/utils": "^0.1.3-test32",
     "@floating-ui/dom": "^1.7.4",
     "@myriaddreamin/rehype-typst": "^0.6.0",
@@ -113,6 +114,7 @@
     "esbuild": "^0.27.2",
     "prettier": "^3.8.1",
     "puppeteer-core": "^24.0.0",
+    "sequoia-cli": "^0.5.7",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "wrangler": "^4.99.0"

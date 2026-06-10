@@ -10,3 +10,5 @@ cache/
 private/
 .replit
 replit.nix
+
+.sequoia-state.json

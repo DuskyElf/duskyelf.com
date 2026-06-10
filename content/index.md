@@ -1,6 +1,8 @@
 ---
 title: DuskyElf
+description: I just really want to figure out how the world works. I aim to lead teams, make the world a better place, and figure out if Schrödinger's cat is currently judging me.
 date: 2026-06-10
+atUri: "at://did:plc:ygdeyuxj3bfk42zacptp3sw7/site.standard.document/3mnwwzwj7au2l"
 ---
 
 <div class="hero-section">

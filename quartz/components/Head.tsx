@@ -82,6 +82,9 @@ export default (() => {
           </>
         )}
 
+        {fileData.frontmatter?.atUri && (
+          <link rel="site.standard.document" href={fileData.frontmatter.atUri} />
+        )}
         <link rel="icon" href={iconPath} />
         <meta name="description" content={description} />
         <meta name="generator" content="Quartz" />

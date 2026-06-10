@@ -1,0 +1,20 @@
+{
+  "publicDir": "./content",
+  "outputDir": "./public",
+  "pathPrefix": "",
+  "publishContent": true,
+  "removeIndexFromSlug": false,
+  "stripDatePrefix": false,
+  "autoSync": true,
+  "$schema": "https://tangled.org/stevedylan.dev/sequoia/raw/main/sequoia.schema.json",
+  "siteUrl": "https://duskyelf.com",
+  "contentDir": "./content",
+  "publicationUri": "at://did:plc:ygdeyuxj3bfk42zacptp3sw7/site.standard.publication/3mnwwvatoog2l",
+  "frontmatter": {
+    "publishDate": "date"
+  },
+  "bluesky": {
+    "enabled": true,
+    "maxAgeDays": 500
+  }
+}

@@ -38,6 +38,19 @@ Since Quartz is an upstream project, tracking our modifications here makes it mu
 
 - `Footer.tsx`: Updated the footer text to explicitly state that code is licensed under MIT and content under CC BY 4.0.
 
+## [2026-06-10] - Dotfile Support for Content Assets
+
+**Files modified:**
+
+- `quartz/util/glob.ts`
+
+**Changes:**
+
+- Added `dot: true` to `globby()` options so that `**` glob pattern matches directories
+  starting with `.` (e.g. `.well-known/`). Without this, the Assets emitter silently
+  skipped all content inside dot-directories, preventing files like
+  `site.standard.publication` from being copied to the build output.
+
 ## [2026-05-05] - Sticky Sidebars & Overflow Fix
 
 **Files modified:**
