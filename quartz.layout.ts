@@ -36,6 +36,10 @@ export const sharedPageComponents: SharedLayout = {
     }),
     Component.ConditionalRender({
       condition: (page) => page.fileData.slug !== "index",
+      component: Component.SequoiaComments(),
+    }),
+    Component.ConditionalRender({
+      condition: (page) => page.fileData.slug !== "index",
       component: Component.Graph(),
     }),
   ],

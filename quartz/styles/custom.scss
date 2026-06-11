@@ -384,6 +384,16 @@ footer a {
   }
 }
 
+// === SEQUOIA COMMENTS ===
+sequoia-comments {
+  display: block;
+  margin-bottom: 2rem;
+  --sequoia-fg-color: var(--darkgray);
+  --sequoia-bg-color: var(--light);
+  --sequoia-border-color: var(--lightgray);
+  --sequoia-secondary-color: var(--gray);
+}
+
 // === DARK MODE TOGGLE ===
 .darkmode {
   transition: transform 0.2s ease !important;

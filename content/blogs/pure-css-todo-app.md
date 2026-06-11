@@ -1,7 +1,7 @@
 ---
 title: Zero JS, Pure CSS ToDo App
 description: Walkthrough of the techniques used in a fully functional Todo app built using only HTML and CSS
-date: 2025-4-11
+date: 2026-6-11
 tags:
   - web
 atUri: "at://did:plc:ygdeyuxj3bfk42zacptp3sw7/site.standard.document/3mnwwzxuzl72t"

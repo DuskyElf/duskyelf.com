@@ -16,5 +16,8 @@
   "bluesky": {
     "enabled": true,
     "maxAgeDays": 500
+  },
+  "ui": {
+    "components": "quartz/components/scripts"
   }
 }
