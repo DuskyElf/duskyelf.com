@@ -726,11 +726,25 @@ class SequoiaComments extends BaseElement {
 	connectedCallback() {
 		this.initialized = true;
 		this.render();
-		this.loadComments();
+
+		// On direct page load, the <link> tag is already in the head.
+		// On SPA navigation, Quartz patches body first (triggering this callback)
+		// then patches head, so the link tag isn't available yet.
+		// The "nav" event fires after head patching — load then for SPA case.
+		this._navHandler = () => this.loadComments();
+		document.addEventListener("nav", this._navHandler);
+
+		// If the link tag is already present (direct page load), load immediately
+		// since the "nav" event may have already fired before the custom element
+		// definition was registered (async script injection).
+		if (this.documentUri) {
+			this.loadComments();
+		}
 	}
 
 	disconnectedCallback() {
 		this.abortController?.abort();
+		document.removeEventListener("nav", this._navHandler);
 	}
 
 	attributeChangedCallback() {
