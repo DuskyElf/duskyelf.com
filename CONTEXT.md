@@ -8,7 +8,7 @@ _Quartz 4 digital garden and personal blog with a custom authored layer on top o
 
 ### Site
 
-The generated static site: HTML, CSS, and assets deployed to GitHub Pages.
+The generated static site: HTML, CSS, and assets deployed to Cloudflare Pages.
 
 ### Content
 
@@ -54,6 +54,26 @@ A plugin that decides whether content is published.
 
 A plugin that produces output artifacts such as HTML, JSON, RSS, sitemap, or image assets.
 
+### Excalidraw
+
+A drawing format (`.excalidraw` files or `.excalidraw.md` pages) rendered to SVG at build time via a Puppeteer browser runtime. Uses a content-hashed cache in `cache/excalidraw/`.
+
+### Sequoia Comments
+
+AT Protocol-based comment system. Registered as `<sequoia-comments>` custom element, wired through `quartz/components/SequoiaComments.tsx` and `quartz/components/scripts/sequoia-comments.js`.
+
+### Browser Runtime
+
+A Puppeteer process (`scripts/browser-runtime.mjs`) that launches headless Chromium at build time to run DOM-dependent exports (e.g. Excalidraw SVG).
+
+### AT Protocol
+
+The decentralized protocol powering Sequoia comments and site publication artifacts in `content/.well-known/`.
+
+### Dot-directory
+
+A filesystem directory starting with `.` (e.g. `.well-known/`). Supported for content assets via a Quartz glob fix (see `QUARTZ_CHANGES.md`).
+
 ---
 
 ## System Model
@@ -72,9 +92,13 @@ Components receive page data and render into layout slots such as `head`, `heade
 
 Transformers modify content, filters narrow publication, emitters materialize output.
 
-### Script Path
+### Script Path — Browser (Inline)
 
-Inline scripts attach to components, bundle through Quartz, and run in the browser after DOM lifecycle points such as `beforeDOMLoaded` and `afterDOMLoaded`.
+Inline scripts (`quartz/components/scripts/*.inline.ts`) attach to components, bundle through Quartz, and run in the browser after DOM lifecycle points such as `beforeDOMLoaded` and `afterDOMLoaded`.
+
+### Script Path — Build-time (Browser Runtime)
+
+Build-time scripts (`scripts/`) run in a Puppeteer-based headless Chromium during the Quartz build. `scripts/browser-runtime.mjs` manages a persistent browser daemon; `scripts/excalidraw-bundle.js` is the Excalidraw renderer loaded inside the browser page. Not bundled into the site output.
 
 ### Style Path
 
@@ -90,8 +114,13 @@ Styles layer from Quartz base, then `quartz/styles/custom.scss`, then component-
 
 - `quartz/` is the framework layer.
 - `content/` is the authored layer.
+- `scripts/` is the build-time tooling layer (browser runtime, not in output).
 - `docs/` is Quartz reference.
 - `docs/agents/` is repo-owned memory for repo-specific language and workflow.
+- `docs/adr/` records architecture decisions.
+- `cache/` is generated build-time cache (gitignored).
+- `sequoia.json` is Sequoia Comments config.
+- `wrangler.toml` is Cloudflare Pages deployment config.
 - `QUARTZ_CHANGES.md` records framework-adjacent modifications.
 
 ---
@@ -110,6 +139,7 @@ Read these docs by surface:
 - [`docs/agents/domain.md`](docs/agents/domain.md) — how agents consume this repo's meta knowledge
 - [`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md) — issue workflow language
 - [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md) — label vocabulary
+- [`docs/adr/0001-browser-runtime.md`](docs/adr/0001-browser-runtime.md) — browser runtime decision for Excalidraw
 
 ---
 
@@ -120,6 +150,9 @@ Read these docs by surface:
 - Global animations must be scoped; nested selectors collide.
 - `.recent-notes` contains nested headings and tags; universal selectors are too broad.
 - The search system uses a custom CJK-aware tokenizer.
+- Excalidraw SVGs are content-hashed and cached in `cache/excalidraw/`; browser runtime is started once per build and stopped on `--serve` teardown.
+- Sequoia Comments injects `<script src="/static/sequoia-comments.js">` via `afterDOMLoaded` on non-index pages; guards against duplicate injection.
+- Content in dot-directories (`.well-known/`) is now supported — the Assets emitter glob was fixed to include `**` matching dot-prefixed paths.
 
 ---
 

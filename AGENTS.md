@@ -25,6 +25,9 @@ Quartz 4 with a custom authored layer.
 - `quartz.components` / `quartz.plugins` → extension points
 - `quartz.layout.ts` → page regions
 - `quartz/styles/custom.scss` → site voice
+- `scripts/` → build-time tooling (browser runtime for Excalidraw SVG export)
+- `sequoia.json` → Sequoia Comments config
+- `wrangler.toml` → Cloudflare Pages deployment config
 
 ## Hard Boundaries
 
@@ -35,9 +38,12 @@ Quartz 4 with a custom authored layer.
 ## Working Surfaces
 
 - Components / inline scripts → `quartz/components/` / `quartz/components/scripts/*.inline.ts`
+- Build-time scripts → `scripts/` (browser runtime, excalidraw bundle)
 - Transformers / filters / emitters → `quartz/plugins/*`
 - Layout → `quartz.layout.ts`
 - Theme → `quartz.config.ts`, `quartz/styles/custom.scss`
+- Config → `sequoia.json`, `wrangler.toml`
+- Decisions → `docs/adr/`
 
 ## Operational Memory
 
@@ -45,6 +51,9 @@ Quartz 4 with a custom authored layer.
 - The homepage uses raw HTML blocks for complex structure.
 - Global animations must be scoped.
 - `RecentNotes` has nested headings and tags; avoid broad selectors.
+- Sequoia Comments uses `<sequoia-comments>` custom element, injects script via `afterDOMLoaded` on non-index pages.
+- Excalidraw uses a Puppeteer browser runtime in `scripts/browser-runtime.mjs` for build-time SVG export; SVGs are content-hashed and cached in `cache/excalidraw/`.
+- Content in dot-directories (`.well-known/`) is now supported (dotfile glob fix in `QUARTZ_CHANGES.md`).
 
 ## Tone
 
