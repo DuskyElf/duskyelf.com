@@ -51,6 +51,28 @@ Since Quartz is an upstream project, tracking our modifications here makes it mu
   skipped all content inside dot-directories, preventing files like
   `site.standard.publication` from being copied to the build output.
 
+## [2026-06-12] - Fix text color override in inlined Excalidraw SVGs
+
+**Files modified:**
+
+- `quartz/styles/base.scss`
+
+**Changes:**
+
+- Removed `text` from the broad type-selector list in `base.scss` (which included
+  `p, ul, text, a, tr, td, li, ol, ul, …`).
+  
+  **Why:** The `text` selector matches SVG `<text>` elements. When Excalidraw SVGs
+  are inlined at runtime (by `excalidraw.inline.ts`), the rule `text { fill: var(--darkgray); }`
+  overrides every `<text>` element's `fill` attribute — turning custom colors (e.g.
+  red `#e03131` axioms text) into `var(--darkgray)` (near-black in light mode).
+  
+  This is safe because `fill` is inherited in SVG. The same rule block already
+  includes `.katex`, `.math`, `.typst-doc`, and `g[class~="typst-text"]` — these
+  parent containers set `fill: var(--darkgray)`, and their child SVG `<text>`
+  elements inherit it automatically. The bare `text` selector was redundant for
+  those cases but harmful for excalidraw.
+
 ## [2026-05-05] - Sticky Sidebars & Overflow Fix
 
 **Files modified:**

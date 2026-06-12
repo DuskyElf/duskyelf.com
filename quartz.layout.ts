@@ -36,7 +36,9 @@ export const sharedPageComponents: SharedLayout = {
     }),
     Component.ConditionalRender({
       condition: (page) =>
-        page.fileData.slug !== "index" && page.fileData.filePath !== undefined,
+        page.fileData.slug !== "index" &&
+        page.fileData.filePath !== undefined &&
+        page.fileData.slug!.startsWith("blogs/"),
       component: Component.SequoiaComments(),
     }),
     Component.ConditionalRender({

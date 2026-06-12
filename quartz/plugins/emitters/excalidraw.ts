@@ -110,6 +110,7 @@ export const ExcalidrawSvg: QuartzEmitterPlugin = () => {
       async function writeSvg(slug: string, svg: string, svgOut: string, hash: string) {
         const { svg: svgCache, hash: hashCache } = cachePaths(slug)
         await fs.promises.mkdir(path.dirname(svgOut), { recursive: true })
+        await fs.promises.mkdir(path.dirname(svgCache), { recursive: true })
         await fs.promises.writeFile(svgOut, svg)
         await fs.promises.writeFile(svgCache, svg)
         await fs.promises.writeFile(hashCache, hash)

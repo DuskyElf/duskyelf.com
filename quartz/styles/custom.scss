@@ -355,6 +355,12 @@ footer a {
 // Dark/light mode is handled by JavaScript in excalidraw.inline.ts
 // which swaps fill/stroke attributes on the SVG elements directly.
 // This provides proper text color switching that CSS filter cannot achieve.
+//
+// NOTE: The bare `text` selector was removed from base.scss's universal
+// rule block (p, ul, text, a, …). It overrode SVG <text> fill attributes
+// once SVGs were inlined — turning colored text (e.g. red axioms) black.
+// The .katex, .math, .typst-doc, and g[class~="typst-text"] selectors
+// in that block still set fill via inheritance, which is sufficient.
 
 .excalidraw-embed {
   margin: 2rem auto;
