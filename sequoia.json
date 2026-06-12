@@ -1,5 +1,5 @@
 {
-  "publicDir": "./content",
+  "publicDir": "./content/blogs",
   "outputDir": "./public",
   "pathPrefix": "",
   "publishContent": true,
@@ -8,7 +8,7 @@
   "autoSync": true,
   "$schema": "https://tangled.org/stevedylan.dev/sequoia/raw/main/sequoia.schema.json",
   "siteUrl": "https://duskyelf.com",
-  "contentDir": "./content",
+  "contentDir": "./content/blogs",
   "publicationUri": "at://did:plc:ygdeyuxj3bfk42zacptp3sw7/site.standard.publication/3mnwwvatoog2l",
   "frontmatter": {
     "publishDate": "date"
