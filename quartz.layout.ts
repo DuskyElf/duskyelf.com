@@ -35,7 +35,8 @@ export const sharedPageComponents: SharedLayout = {
       }),
     }),
     Component.ConditionalRender({
-      condition: (page) => page.fileData.slug !== "index",
+      condition: (page) =>
+        page.fileData.slug !== "index" && page.fileData.filePath !== undefined,
       component: Component.SequoiaComments(),
     }),
     Component.ConditionalRender({
