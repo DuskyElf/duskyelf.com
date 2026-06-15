@@ -1,6 +1,7 @@
 ---
 title: Implication (logic gate)
 description: Implication logic gate
+date: 2026-06-12
 tags:
   - maths
   - logic
@@ -22,7 +23,7 @@ $A \implies B$ is not equivalent to $\lnot A \implies \lnot B$
 "I think therefore I am" does not mean "I don't think therefore I do not am"
 
 ## Contrapositive
-$\lnot B \implies \lnot A$
+$(A \implies B) \implies (\lnot B \implies \lnot A)$
 
 $(A \implies B) \implies (B \lor \lnot A)$
 

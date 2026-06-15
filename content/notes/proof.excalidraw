@@ -425,8 +425,8 @@
       "type": "text",
       "x": 639.9193539930925,
       "y": 347.1542081858552,
-      "width": 386.8757180745075,
-      "height": 54.285646449494536,
+      "width": 384.3333435058594,
+      "height": 54.28564644949455,
       "angle": 0,
       "strokeColor": "#868e96",
       "backgroundColor": "transparent",
@@ -440,8 +440,8 @@
       "index": "aa",
       "roundness": null,
       "seed": 583484870,
-      "version": 145,
-      "versionNonce": 782365274,
+      "version": 147,
+      "versionNonce": 2001024624,
       "isDeleted": false,
       "boundElements": [
         {
@@ -449,8 +449,8 @@
           "type": "arrow"
         }
       ],
-      "updated": 1781252915031,
-      "link": null,
+      "updated": 1781428689092,
+      "link": "/notes/proof#logical-deductions",
       "locked": false,
       "text": "Logical deductions",
       "fontSize": 43.42851715959564,

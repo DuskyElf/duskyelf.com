@@ -1,6 +1,6 @@
 ---
 title: Proof
-date: 2026-06-12
+date: 2026-06-14
 tags:
   - maths
   - logic
@@ -10,7 +10,7 @@ tags:
 
 ![proof-excalidraw](./proof.excalidraw)
 
-A mathematical proof is a verification of a [proposition](#proposition) by a chain of [[logical deductions]] from a base set of [axioms](#axiom).
+A mathematical proof is a verification of a [proposition](#proposition) by a chain of [logical deductions](#logical-deductions) from a base set of [axioms](#axiom).
 
 ## Proposition
 
@@ -20,11 +20,15 @@ A proposition is a statement that is either true or false.
 
 A parameterized statement that is not yet a complete proposition. It usually expresses a property of an object, or a relationship between objects.
 
-## Combinatinators
+## Logical deductions
 
-Propositions can be combined using Boolean Logic Gates to form new propositions.
+Propositions can be combined using Boolean Logic Gates to form new propositions. An **inference rules** is a rule for combining true propositions to form other true propositions.
 
-[[implication]] logic gate is often misunderstood.
+### Common inference rules
+
+**Modus Pones**: if $(P \land (P \implies Q))$ then $Q$ [see [[implication]]]
+
+**Contrapositive**: $((P \implies Q) \land \lnot Q) \implies \lnot P$ [see [[implication#contrapositive]]]
 
 ## Axiom
 
