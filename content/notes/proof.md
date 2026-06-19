@@ -1,6 +1,6 @@
 ---
 title: Proof
-date: 2026-06-14
+date: 2026-06-19
 tags:
   - maths
   - logic
@@ -42,3 +42,43 @@ A set of axioms is **complete** when every true proposition can be proved from t
 
 Gödel's Incompleteness theorem proved that you can't have both (complete and consistent) as long as it's complicated enough to do arithmetic.
 
+## Proof outlines
+
+<hr>
+
+Theorem: $\exists$ $x \in S \cdot P(x)$
+
+Proof: Choose $x = \boxed{?}$ then $x \in S$ because $\boxed{?}$ and $P(x)$ is true because $\boxed{?}$
+
+<hr>
+
+Theorem: $\forall$ $x \in S \cdot P(x)$
+
+Proof: Suppose $x$ is a generic element of $S$. Then $P(x)$ is true because $\boxed{?}$
+
+<hr>
+
+Theorem: $P \implies Q$
+
+**Direct Proof**: Assume $P$ then $Q$ is true because $\boxed{?}$
+
+**Proof by [[implication#contrapositive]]**: Proof by Contrapositive, assume $Q$ is false. Then $P$ is false because $\boxed{?}$
+
+<hr>
+
+Theorem: $P$
+
+Proof: For sake of contradiction, assume $P$ is false ...$\boxed{?}$... Then $R$ is both true and false, contradiction.
+(So our assumption is wrong, $P$ is true)
+
+<hr>
+
+### Common Abbreviations
+
+**WTS**: Want to show
+
+**QED**: That which was to be demonstrated (_quod erat demonstrandum_)
+
+## Principle of induction
+
+$(P(x) \land \forall n \geq x \cdot P(n) \implies P(n + 1)) \implies (\forall n \geq x \cdot P(n))$
